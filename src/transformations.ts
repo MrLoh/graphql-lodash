@@ -40,6 +40,24 @@ import invertBy from 'lodash/invertBy.js';
 import keys from 'lodash/keys.js';
 import values from 'lodash/values.js';
 
+const typeCasts = {
+   'Date': val => new Date(val),
+   'Number': val => new Number(val),
+   'String': val => new String(val),
+   'Boolean': val => new Boolean(val),
+}
+
+// this code is not working yey, it somehow doesn't receive the arg argument
+const as = (value, arg) => {
+  if(!value) {
+    return value
+  } else if(arg in typeCasts) {
+    return typeCasts[arg](value)
+  } else {
+    throw Error(`can't cast to "${arg}" only the following types are supported: ${Object.keys(typeCasts).join(', ')}.`);
+  }
+},
+
 const transformations = {
   Array: {
     each: (array, arg) => {
@@ -91,10 +109,12 @@ const transformations = {
     gt,
     gte,
     eq,
+    as
   },
   String: {
     startsWith,
     endsWith,
+    as
   },
 };
 
